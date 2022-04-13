@@ -3,7 +3,7 @@
  * Date Created: April 6, 2022
  * 
  * Last Edited by: Ava Fritts
- * Last Edited: April 6 2022
+ * Last Edited: April 11 2022
  * 
  * Description: Hero projectile controller
 ****/
@@ -43,12 +43,32 @@ public class ObjectPool : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        for(int i = 0; i < poolStartSize; i++)
+        {
+            GameObject projectileGO = Instantiate(projectilePrefab);
+            projectiles.Enqueue(projectileGO);
+            projectileGO.SetActive(false); //disabled in scene
+        }
+    }//end Start()
+
+    public GameObject GetObject()
+    {
+        if(projectiles.Count > 0)
+        {
+            GameObject gObject = projectiles.Dequeue();
+            gObject.SetActive(true);
+            return gObject;
+        }
+        else
+        {
+            Debug.LogWarning("Out of Objects, reloading...");
+            return null;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ReturnObject(GameObject gObject)
     {
-        
-    }
+        projectiles.Enqueue(gObject); //add to queue
+        gObject.SetActive(false); //disable
+    }//end ReturnObject
 }

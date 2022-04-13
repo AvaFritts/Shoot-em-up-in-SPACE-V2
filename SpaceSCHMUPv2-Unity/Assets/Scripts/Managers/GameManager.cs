@@ -3,7 +3,7 @@
  * Date Created: Feb 23, 2022
  * 
  * Last Edited by: Ava Fritts
- * Last Edited: April 6, 2022
+ * Last Edited: April 11, 2022
  * 
  * Description: Basic GameManager Template
 ****/
@@ -19,6 +19,8 @@ using UnityEngine.SceneManagement; //libraries for accessing scenes
 public enum GameState { Title, Playing, BeatLevel, LostLevel, GameOver, Idle , Testing };
 //enum of game states (work like it's own class)
 
+//GameManager needs an Audio Source
+[RequireComponent(typeof(AudioSource))]
 public class GameManager : MonoBehaviour
 {
     /*** VARIABLES ***/
@@ -78,6 +80,10 @@ public class GameManager : MonoBehaviour
     public int Score { get { return score; } set { score = value; } }//access to static variable score [get/set methods]
 
     [Space(10)]
+    public AudioClip backgroundMusicClip;
+    private AudioSource audioSource; //reference to audio source
+
+    [Space(10)]
     public string defaultEndMessage = "Game Over";//the end screen message, depends on winning outcome
     public string loseMessage = "You Lose"; //Message if player loses
     public string winMessage = "You Win"; //Message if player wins
@@ -118,7 +124,7 @@ public class GameManager : MonoBehaviour
     private static string thisDay = System.DateTime.Now.ToString("yyyy"); //today's date as string
 
 
-    /*** MEHTODS ***/
+    /*** METHODS ***/
 
     //Awake is called when the game loads (before Start).  Awake only once during the lifetime of the script instance.
     void Awake()
@@ -137,6 +143,17 @@ public class GameManager : MonoBehaviour
     //Start is called once before the update
     void Start()
     {
+        //if background music exists
+        if(backgroundMusicClip != null)
+        {
+            audioSource = GetComponent<AudioSource>();
+            audioSource.volume = 0.5f;
+            audioSource.clip = backgroundMusicClip;
+            audioSource.loop = true;
+            audioSource.playOnAwake = true;
+            audioSource.Play();
+        }
+
         //if we run play the game from the level instead of start scene (PLAYTESTING ONLY)
         if (currentSceneName != startScene) { SetGameState(GameState.Testing); }//set the game state for testing }
 

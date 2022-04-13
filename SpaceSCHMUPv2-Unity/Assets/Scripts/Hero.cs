@@ -3,7 +3,7 @@
  * Date Created: March 16, 2022
  * 
  * Last Edited by: Ava Fritts
- * Last Edited: April 6 2022
+ * Last Edited: April 11 2022
  * 
  * Description: Hero ship controller
 ****/
@@ -38,6 +38,7 @@ public class Hero : MonoBehaviour
     #endregion
 
     GameManager gm; //reference to game manager
+    ObjectPool pool; //reference to object pool
 
     [Header("Ship Movement")]
     public float speed = 10;
@@ -51,6 +52,9 @@ public class Hero : MonoBehaviour
     [Header("Projectile Movement")]
     public GameObject projectilePrefab;
     public float projectileSpeed = 40;
+    public AudioClip projectileSound; //sound clip for projectile
+    public AudioClip projectileFailureSound; //sound for a failed shot
+    private AudioSource audioSource; //audio source component
 
     private GameObject lastTriggerGo; //reference to the last triggering game object
    
@@ -78,7 +82,7 @@ public class Hero : MonoBehaviour
         }
     }
 
-    /*** MEHTODS ***/
+    /*** METHODS ***/
 
     //Awake is called when the game loads (before Start).  Awake only once during the lifetime of the script instance.
     void Awake()
@@ -91,6 +95,8 @@ public class Hero : MonoBehaviour
     private void Start()
     {
         gm = GameManager.GM; //find the game manager
+        pool = ObjectPool.POOL; //find the pool
+        audioSource = GetComponent<AudioSource>();
     }//end Start()
 
 
@@ -150,10 +156,30 @@ public class Hero : MonoBehaviour
 
     void FireProjectile()
     {
-        GameObject projGo = Instantiate<GameObject>(projectilePrefab);
-        projGo.transform.position = transform.position;
-        Rigidbody rb = projGo.GetComponent<Rigidbody>();
-        rb.velocity = Vector3.up * projectileSpeed;
+        //instantiate the projectile
+        //GameObject projGo = Instantiate<GameObject>(projectilePrefab);
+
+        GameObject projGo = pool.GetObject();
+
+        if (projGo != null)
+        {
+            if(audioSource != null)
+            {
+                audioSource.PlayOneShot(projectileSound);
+            }
+
+            projGo.transform.position = transform.position; //set position to the ships position
+            Rigidbody rb = projGo.GetComponent<Rigidbody>(); //get the rigidbody
+            rb.velocity = Vector3.up * projectileSpeed; //use velocity to move the projectile
+
+        }
+        else
+        {
+            if (audioSource != null)
+            {
+                audioSource.PlayOneShot(projectileFailureSound);
+            }
+        }
         
     }
 

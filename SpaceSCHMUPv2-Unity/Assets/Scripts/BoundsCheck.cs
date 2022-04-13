@@ -30,7 +30,7 @@ public class BoundsCheck : MonoBehaviour
     public float camHeight; //gets the height of the camera
 
 
-    /*** MEHTODS ***/
+    /*** METHODS ***/
 
     //Awake is called when the game loads (before Start).  Awake only once during the lifetime of the script instance.
     void Awake()
@@ -38,7 +38,7 @@ public class BoundsCheck : MonoBehaviour
         camHeight = Camera.main.orthographicSize; 
         //Height is the orthographic size of the main camera
         camWidth = camHeight * Camera.main.aspect; 
-        //Aspect ratio is defined in the game view, multipling by the height will give the distance from the orging to the left of right edge of the scene.
+        //Aspect ratio is defined in the game view, multiplying by the height will give the distance from the origin to the left or right edge of the scene.
 
     }//end Awake()
 

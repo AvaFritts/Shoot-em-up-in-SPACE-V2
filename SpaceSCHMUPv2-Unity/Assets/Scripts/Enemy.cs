@@ -34,7 +34,7 @@ public class Enemy : MonoBehaviour
         set { this.transform.position = value; }
     }
 
-    /*** MEHTODS ***/
+    /*** METHODS ***/
 
     //Awake is called when the game loads (before Start).  Awake only once during the lifetime of the script instance.
     void Awake()
@@ -53,7 +53,7 @@ public class Enemy : MonoBehaviour
         //Check if bounds check exists and the object is off the bottom of the scene
         if(bndCheck != null && bndCheck.offDown)
         {
-              Destroy(gameObject); //destory the object
+              Destroy(gameObject); //destroy the object
 
         }//end if(bndCheck != null && !bndCheck.offDown)
 
@@ -76,7 +76,8 @@ public class Enemy : MonoBehaviour
         if(otherGo.tag == "ProjectileHero")
         {
             Debug.Log("Enemy hit by projectile " + otherGo.name);
-            Destroy(otherGo); //destroy the projectile
+            // Destroy(otherGo); //destroy the projectile
+            otherGo.SetActive(false); //disable the other object
             GameManager.GM.UpdateScore(score); //add to score
             Destroy(gameObject); //destroy the enemy
         }
